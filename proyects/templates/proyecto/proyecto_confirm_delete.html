@@ -1,0 +1,9 @@
+{% load crispy_forms_tags %}
+{% block content %}
+<h1>¿Seguro que quieres eliminar el proyecto "{{ proyecto.nombre_proyecto }}"?</h1>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a href="{% url 'proyecto_list' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

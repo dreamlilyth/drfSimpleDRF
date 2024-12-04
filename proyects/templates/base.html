@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Estilos personalizados -->
+    <style>
+        /* Colores personalizados */
+        body{
+            background-color: #ffbad68c;
+        }
+        
+        .navbar {
+            background-color: #9b59b6 !important; /* Morado */
+        }
+        .navbar a, .navbar-brand {
+            color: #ffffff !important; /* Rosado */
+        }
+        .navbar a:hover {
+            color: #ffffff !important;
+        }
+        .btn-primary {
+            background-color: #e91e62cc !important; /* Rosado */
+            border-color: #d81b60 !important;
+        }
+        .btn-primary:hover {
+            background-color: #d81b60 !important;
+            border-color: #c2185b !important;
+        }
+        .btn-danger {
+            background-color: #9b59b6 !important; /* Morado */
+            border-color: #8e44ad !important;
+        }
+        .btn-danger:hover {
+            background-color: #8e44ad !important;
+            border-color: #7d3c8c !important;
+        }
+        .btn-secondary {
+            background-color: #f8c8dc !important; /* Rosado */
+            border-color: #e91e63 !important;
+        }
+        .btn-secondary:hover {
+            background-color: #e91e63 !important;
+            border-color: #c2185b !important;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="navbar-brand" href="{% url 'proyecto_list' %}">Lista de Proyectos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="navbar-brand" href="{% url 'proyecto_create' %}">Crear Proyecto</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

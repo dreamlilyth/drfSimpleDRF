@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Proyectos{% endblock %}
+
+{% block content %}
+<h1 style="text-align: center;margin-bottom: 40px; font-size: 60px;">Lista de Proyectos</h1>
+
+<header class="row" style="background-color:  #ce8de7;margin-bottom: 20px;border-radius: 10px;">
+    <div class="mb-3">
+        <label for="search-id" class="form-label"  style="font-size: 25px;font-family:Arial, Helvetica, sans-serif;margin-top: 20px;margin-bottom: 10px;">
+            Buscar ID
+        </label>
+        <input type="number" id="search-id" class="form-control" placeholder="Digite la ID">
+        <button id="search-btn" style="margin-top: 10px;font-family: Verdana, Geneva, Tahoma, sans-serif;" class="btn btn-primary mt-3">Buscar</button>
+        <div class="card-header">
+            <h2 style="margin-top: 10px;text-align: center;"><strong>JSON</strong></h2>
+        </div>
+        <div class="card-body">
+            <pre id="json-output" class="bg-light p-3 border rounded" style="max-height: 400px; overflow-y: auto;">Cargando datos...</pre>
+        </div>
+    </div>    
+    
+</header>
+
+
+
+<div id="delete-container" class="mt-3" style="display: none;">
+    <button id="delete-btn" class="btn btn-danger">Eliminar Proyecto</button>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const outputElement = document.getElementById("json-output");
+        const searchInput = document.getElementById("search-id");
+        const searchButton = document.getElementById("search-btn");
+        const deleteContainer = document.getElementById("delete-container");
+        const deleteButton = document.getElementById("delete-btn");
+
+        let currentProjectId = null;
+
+        const loadProjects = async () => {
+            try {
+                const response = await fetch("{% url 'proyecto_api_list' %}");
+                const data = await response.json();
+                outputElement.textContent = JSON.stringify(data, null, 4);
+            } catch (error) {
+                outputElement.textContent = "Error al cargar los datos.";
+            }
+        };
+
+        const searchProject = async () => {
+            const id = searchInput.value;
+            if (!id) {
+                alert("Ingresa un ID válido para buscar.");
+                return;
+            }
+
+            try {
+                const response = await fetch(`{% url 'proyecto_api_detail' 0 %}`.replace("0", id));
+                if (response.ok) {
+                    const data = await response.json();
+                    outputElement.textContent = JSON.stringify(data, null, 4);
+
+                    currentProjectId = id;
+                    deleteContainer.style.display = "block"; 
+                } else {
+                    outputElement.textContent = "No se encontró un proyecto con ese ID.";
+                    deleteContainer.style.display = "none"; 
+                }
+            } catch (error) {
+                outputElement.textContent = "Error al buscar el proyecto.";
+                deleteContainer.style.display = "none"; 
+            }
+        };
+
+        const deleteProject = async () => {
+            if (!currentProjectId) return;
+
+            if (!confirm("¿Estás seguro de que deseas eliminar este proyecto?")) return;
+
+            try {
+                const response = await fetch(`{% url 'proyecto_api_detail' 0 %}`.replace("0", currentProjectId), {
+                    method: "DELETE",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}", 
+                    },
+                });
+
+                if (response.ok) {
+                    alert("Proyecto eliminado exitosamente.");
+                    loadProjects(); 
+                    deleteContainer.style.display = "none"; 
+                    currentProjectId = null;  
+                }
+            } catch (error) {
+                alert("Error al intentar eliminar el proyecto.");
+            }
+        };
+
+        searchButton.addEventListener("click", searchProject);
+        deleteButton.addEventListener("click", deleteProject);
+
+        loadProjects();
+    });
+</script>
+{% endblock %}
